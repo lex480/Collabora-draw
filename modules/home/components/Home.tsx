@@ -53,12 +53,14 @@ const Home = () => {
     socket.emit("create_room", username);
   };
 
-  const handleJoinRoom = (e: any) => {
+  const handleJoinRoom = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (e.target[0].value.length === 0) {
+    const trimmedRoomId = roomId.trim();
+    if (!trimmedRoomId) {
       openModal(<NotFoundModal id={roomId} />);
+      return;
     }
-    if (roomId) socket.emit("join_room", roomId, username);
+    socket.emit("join_room", trimmedRoomId, username.trim());
   };
 
   return (
@@ -92,15 +94,18 @@ const Home = () => {
         }}
         className=" flex-col items-center"
       >
+        <label htmlFor="display-name" className="mt-10 font-bold">
+          Your name
+        </label>
         <input
-          className="input mt-10"
-          id="room-id"
-          placeholder="Enter your name"
+          className="input mt-2"
+          id="display-name"
+          placeholder="e.g. Samreen"
           value={username}
           onChange={(e) => setUsername(e.target.value.slice(0, 15))}
         />
 
-        <div className="my-8 h-px w-96" />
+        <div className="my-8 h-px w-full max-w-sm" />
 
         <div className="flex flex-col items-center gap-2">
           <button className="btn" onClick={handleCreateRoom}>
@@ -108,20 +113,26 @@ const Home = () => {
           </button>
         </div>
 
-        <div className="my-8 flex w-96 items-center gap-2">
+        <div className="my-8 flex w-full max-w-sm items-center gap-2">
           <div className="h-px w-full bg-zinc-200" />
           <p className="text-zinc-400">or</p>
           <div className="h-px w-full bg-zinc-200" />
         </div>
 
-        <form onSubmit={handleJoinRoom}>
+        <form
+          className="w-[680px] rounded-xl border border-zinc-200 bg-white p-6 text-left shadow-sm"
+          onSubmit={handleJoinRoom}
+        >
           <label htmlFor="room-id" className=" font-bold leading-tight">
-            Enter room id you want to join
+            Join an existing room
           </label>
+          <p id="room-help" className="mt-1 text-sm text-zinc-600">
+            Enter the room ID shared by your teammate.
+          </p>
           <input
-            min={1}
             className="input mt-2"
             id="room-id"
+            aria-describedby="room-help"
             placeholder="Room id..."
             value={roomId}
             onChange={(e) => setRoomId(e.target.value)}

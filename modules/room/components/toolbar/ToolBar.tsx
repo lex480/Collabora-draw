@@ -96,7 +96,13 @@ const ToolBar = () => {
         {/* <div className="h-px w-full bg-white" /> */}
 
         {/* <BackgroundPicker /> */}
-        <button className=" btn-icon  text-2xl" onClick={handleShare}>
+        <button
+          type="button"
+          className="btn-icon text-2xl"
+          aria-label="Invite people"
+          title="Invite people"
+          onClick={handleShare}
+        >
           <IoIosShareAlt />
         </button>
         <button className="btn-icon  text-2xl" onClick={handleDownload}>
